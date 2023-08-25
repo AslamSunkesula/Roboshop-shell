@@ -13,47 +13,50 @@ G="\e[32m"
 N="\e[0m"
 Y="\e[33m"
 
-VALIDATE() {
-
-    if [ $? -ne 0 ]; then
-
-        echo " $2 is ...... $R Failure"
-
-    else
-
-        echo " $2 is .......$G Success "
-    fi
-
-}
 
 if [ $USERID -ne 0 ]; then
 
-    echo
+    echo -e
     " $R Error : Please run the script with root access $N"
     exit 1
 
 fi
 
-cp mongodb.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
+VALIDATE() {
+
+    if [ $1 -ne 0 ]; then
+
+        echo -e " $2 is ...... $R Failure"
+
+    else
+
+        echo -e " $2 is .......$G Success "
+    fi
+
+}
+
+
+
+cp mongodb.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
 
 VALIDATE $? "copied the mongodb repo into yum.repos directory"
 
-yum install mongodb-org -y &>>$LOGFILE
+yum install mongodb-org -y &>> $LOGFILE
 
 VALIDATE $? "Installing the mongodb"
 
-systemctl enable mongod &>>$LOGFILE
+systemctl enable mongod &>> $LOGFILE
 
 VALIDATE $? "Enabling the mongod"
 
-systemctl start mongod &>>$LOGFILE
+systemctl start mongod &>> $LOGFILE
 
 VALIDATE $? "starting the mongod"
 
-sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>>$LOGFILE
+sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>> $LOGFILE
 
 VALIDATE $? "Edited the mongod.conf"
 
-systemctl restart mongod &>>$LOGFILE
+systemctl restart mongod &>> $LOGFILE
 
 VALIDATE $? "Restarted the mongod"
