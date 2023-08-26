@@ -16,18 +16,18 @@ VALIDATE() {
 
     if [ $? -ne 0 ]; then
 
-        echo " $2 is ...... $R Failure"
+        echo -e " $2 is ...... $R Failure"
 
     else
 
-        echo " $2 is .......$G Success "
+        echo -e " $2 is .......$G Success "
     fi
 
 }
 
 if [ $USERID -ne 0 ]; then
 
-    echo
+    echo -e 
     " $R Error : Please run the script with root access $N"
     exit 1
 
