@@ -37,7 +37,7 @@ VALIDATE() {
 
 
 
-cp /c/Users/assua/devops-shell/Roboshop-shell/mongodb.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
+cp mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
 
 VALIDATE $? "copied the mongodb repo into yum.repos directory"
 
