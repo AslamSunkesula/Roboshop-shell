@@ -61,7 +61,7 @@ VALIDATE $? "Code downloading"
 
 cd /app
 
-unzip /tmp/shipping.zip &>>$LOGFILE
+unzip -o /tmp/shipping.zip &>>$LOGFILE
 
 VALIDATE $? "Unzipping code"
 
