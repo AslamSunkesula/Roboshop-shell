@@ -62,7 +62,7 @@ VALIDATE $? "Code downloading"
 
 cd /app
 
-unzip /tmp/dispatch.zip &>> $LOGFILE
+unzip -o /tmp/dispatch.zip &>> $LOGFILE
 
 VALIDATE $? "Unzipping code"
 
@@ -83,7 +83,9 @@ VALIDATE $? "Creating dispatch service"
 
 # Load, Enable and Start service
 
-systemctl daemon-reload
+systemctl daemon-reload &>> LOGFILE
+
+VALIDATE $? "demon-reload"
 
 systemctl enable dispatch &>> $LOGFILE
 
