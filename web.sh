@@ -4,7 +4,7 @@ DATE=$(date +%F)
 LOGSDIR=/tmp
 # /home/centos/shellscript-logs/script-name-date.log
 SCRIPT_NAME=$0
-LOGFILE=$LOGSDIR/$0-$DATE.log
+LOGFILE=$LOGSDIR/$SCRIPT_NAME-$DATE.log
 USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
@@ -28,47 +28,35 @@ VALIDATE(){
 }
 
 
-# Install Nginx
+yum install nginx -y &>>$LOGFILE
 
-yum install nginx -y &>> $LOGFILE
+VALIDATE $? "Installing Nginx"
 
-VALIDATE $? "Installing nginx"
+systemctl enable nginx &>>$LOGFILE
 
-# Enable and Start nginx service
+VALIDATE $? "Enabling Nginx"
 
-systemctl enable nginx &>> $LOGFILE
+systemctl start nginx &>>$LOGFILE
 
-VALIDATE $? "Enabling nginx service"
+VALIDATE $? "Starting Nginx"
 
-systemctl start nginx &>> $LOGFILE
+rm -rf /usr/share/nginx/html/* &>>$LOGFILE
 
-VALIDATE $? "Starting nginx service"
+VALIDATE $? "Removing default index html files"
 
-# Remove the default content that web server is serving
+curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>>$LOGFILE
 
-rm -rf /usr/share/nginx/html/* >> $LOGFILE
+VALIDATE $? "Downloading web artifact"
 
-VALIDATE $? "Deleting default content"
+cd /usr/share/nginx/html &>>$LOGFILE
 
-# Download the frontend content
+VALIDATE $? "Moving to default HTML directory"
 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip >> $LOGFILE
+unzip /tmp/web.zip &>>$LOGFILE
 
-VALIDATE $? "Downloading required content"
+VALIDATE $? "unzipping web artifact"
 
-# Extract the frontend content
-
-cd /usr/share/nginx/html
-
-unzip -o /tmp/frontend.zip >> $LOGFILE
-
-VALIDATE $? "unzipping cart"
-
-# Create Nginx Reverse Proxy Configuration
-
-cp -v /home/centos/Roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf >> $LOGFILE
-
-# Restart Nginx Service to load the changes of the configuration
+cp /home/centos/Roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf  &>>$LOGFILE
 
 VALIDATE $? "copying roboshop config"
 
