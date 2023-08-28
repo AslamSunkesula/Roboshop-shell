@@ -101,22 +101,6 @@ VALIDATE(){
     fi
 }
 
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$LOGFILE
-
-VALIDATE $? "Setting up NPM Source"
-
-yum install nodejs -y &>>$LOGFILE
-
-VALIDATE $? "Installing NodeJS"
-
-#once the user is created, if you run this script 2nd time
-# this command will defnitely fail
-# IMPROVEMENT: first check the user already exist or not, if not exist then create
-useradd roboshop &>>$LOGFILE
-
-#write a condition to check directory already exist or not
-mkdir /app &>>$LOGFILE
-
 curl -o /tmp/cart.zip https://roboshop-builds.s3.amazonaws.com/cart.zip &>>$LOGFILE
 
 VALIDATE $? "downloading cart artifact"
@@ -134,4 +118,18 @@ npm install &>>$LOGFILE
 VALIDATE $? "Installing dependencies"
 
 # give full path of cart.service because we are inside /app
-cp /home/centos/Roboshop-shell/cart.service /etc/systemd/system/cart.service &>>$LOGFILE
+cp /home/centos/roboshop-shell/cart.service /etc/systemd/system/cart.service &>>$LOGFILE
+
+VALIDATE $? "copying cart.service"
+
+systemctl daemon-reload &>>$LOGFILE
+
+VALIDATE $? "daemon reload"
+
+systemctl enable cart &>>$LOGFILE
+
+VALIDATE $? "Enabling cart"
+
+systemctl start cart &>>$LOGFILE
+
+VALIDATE $? "Starting cart"
