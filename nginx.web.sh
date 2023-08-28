@@ -61,7 +61,7 @@ unzip /tmp/frontend.zip >> "$LOG_FILE"
 
 # Create Nginx Reverse Proxy Configuration
 
-cp -v /home/centos/Roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf >> "$LOG_FILE"
+cp -v /home/centos/Roboshop-shell/roboshop.con /etc/nginx/default.d/roboshop.conf >> "$LOG_FILE"
 
 # Restart Nginx Service to load the changes of the configuration
 
