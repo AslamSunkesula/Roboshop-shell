@@ -60,7 +60,7 @@ VALIDATE $? "Downloading code"
 
 cd /app
 
-unzip /tmp/payment.zip &>>$LOGFILE
+unzip -o /tmp/payment.zip &>>$LOGFILE
 
 # This python app required dependenies. Lets download
 
