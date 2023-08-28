@@ -27,7 +27,7 @@ VALIDATE() {
 
 #Setup the MongoDB repo file
 
-cp mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
+cp /home/centos/Roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
 
 VALIDATE $? "Copied MongoDB repo into yum.repos.d"
 
