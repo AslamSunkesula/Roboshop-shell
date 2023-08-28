@@ -41,7 +41,7 @@ id roboshop &>> /dev/null
 if [[ $? -ne 0 ]]
 then
     useradd roboshop
-    VALIDATE $? $? "User roboshop created"
+    VALIDATE "User roboshop created"
 fi
 
 # This is a usual practice that runs in the organization. Lets setup an app directory if not exist
