@@ -47,6 +47,7 @@ sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>>$LOGFILE
 
 VALIDATE $? "Edited MongoDB conf"
 
-systemctl restart mongodb  &>>$LOGFILE
 
-VALIDATE $? "restart mongodb"
+systemctl restart mongod &>> $LOGFILE
+
+VALIDATE $? "Restarting MonogoDB"
