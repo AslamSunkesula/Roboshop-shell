@@ -17,7 +17,7 @@ then
     exit 1
 fi
 
-VALIDATE(){
+VALIDATE (){
     if [ $1 -ne 0 ];
     then
         echo -e "$2 ... $R FAILURE $N"
@@ -28,11 +28,13 @@ VALIDATE(){
 }
 
 
-# Install Python 3.6
 
-yum install python36 gcc python3-devel -y &>>$LOGFILE
 
-VALIDATE $? "Installing Python"
+# Install GoLang
+
+yum install golang -y &>> $LOGFILE
+
+VALIDATE $? "Installing GoLang"
 
 # Add application User if not exist
 
@@ -49,39 +51,44 @@ DIR="/app"
 if [[ ! -d "$DIR" ]] 
 then
     mkdir "$DIR"
-    VALIDATE  "$DIR Creation"
+    VALIDATE "$DIR Creation"
 fi
 
 # Download the application code to created app directory
 
-curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment.zip &>>$LOGFILE
+curl -L -o /tmp/dispatch.zip https://roboshop-artifacts.s3.amazonaws.com/dispatch.zip &>> $LOGFILE
 
-VALIDATE $? "Downloading code"
+VALIDATE $? "Code downloading"
 
 cd /app
 
-unzip /tmp/payment.zip &>>$LOGFILE
+unzip /tmp/dispatch.zip &>> $LOGFILE
 
-# This python app required dependenies. Lets download
+VALIDATE $? "Unzipping code"
 
-pip3.6 install -r requirements.txt &>>$LOGFILE
+# Lets download the dependencies & build the software
 
-VALIDATE $? "Installing dependencies"
+cd /app 
+go mod init dispatch
+go get
+go build
 
-# Setup SystemD Shipping Service
+VALIDATE $? "Dependencies downloading and Building"
 
-cp -v /home/centos/Roboshope-shell/payment.service /etc/systemd/system/payment.service &>>$LOGFILE
+# Setup SystemD dispatch Service
 
-VALIDATE $? "Creating payment service"
+cp -v /home/centos/Roboshope-shell/dispatch.service /etc/systemd/system/dispatch.service &>> $LOGFILE
+
+VALIDATE $? "Creating dispatch service"
 
 # Load, Enable and Start service
 
 systemctl daemon-reload
 
-systemctl enable payment &>>$LOGFILE
+systemctl enable dispatch &>> $LOGFILE
 
-VALIDATE $? "Enabling payment service"
+VALIDATE $? "Enabling dispatch service"
 
-systemctl start payment &>>$LOGFILE
+systemctl start dispatch &>> $LOGFILE
 
-VALIDATE $? "Starting payment service"
+VALIDATE $? "Starting dispatch service"
