@@ -104,7 +104,7 @@ mv target/shipping-1.0.jar shipping.jar
 
 # Setup SystemD Shipping Service
 
-cp -v /home/centos/roboshop-shell/shipping.service /etc/systemd/system/shipping.service &>>$LOGFILE
+cp -v /home/centos/Roboshop-shell/shipping.service /etc/systemd/system/shipping.service &>>$LOGFILE
 
 VALIDATE $? "Creating shipping service"
 
