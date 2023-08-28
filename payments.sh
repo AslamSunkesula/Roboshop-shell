@@ -28,11 +28,9 @@ VALIDATE(){
 }
 
 
-# Install Python 3.6
-
 yum install python36 gcc python3-devel -y &>>$LOGFILE
 
-VALIDATE $? "Installing Python"
+VALIDATE $? "Installing python"
 
 # Add application User if not exist
 
@@ -54,34 +52,35 @@ fi
 
 # Download the application code to created app directory
 
-curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment.zip &>>$LOGFILE
 
-VALIDATE $? "Downloading code"
+curl -L -o /tmp/payment.zip https://roboshop-builds.s3.amazonaws.com/payment.zip &>>$LOGFILE
 
-cd /app
+VALIDATE $? "Downloading artifact"
+
+cd /app &>>$LOGFILE
+
+VALIDATE $? "Moving to app directory"
 
 unzip -o /tmp/payment.zip &>>$LOGFILE
 
-# This python app required dependenies. Lets download
+VALIDATE $? "unzip artifact"
 
 pip3.6 install -r requirements.txt &>>$LOGFILE
 
 VALIDATE $? "Installing dependencies"
 
-# Setup SystemD Shipping Service
+cp /home/centos/Roboshop-shell/payment.service /etc/systemd/system/payment.service &>>$LOGFILE
 
-cp -v /home/centos/Roboshope-shell/payment.service /etc/systemd/system/payment.service &>>$LOGFILE
+VALIDATE $? "copying payment service"
 
-VALIDATE $? "Creating payment service"
+systemctl daemon-reload &>>$LOGFILE
 
-# Load, Enable and Start service
+VALIDATE $? "daemon-reload"
 
-systemctl daemon-reload
+systemctl enable payment  &>>$LOGFILE
 
-systemctl enable payment &>>$LOGFILE
-
-VALIDATE $? "Enabling payment service"
+VALIDATE $? "enable payment"
 
 systemctl start payment &>>$LOGFILE
 
-VALIDATE $? "Starting payment service"
+VALIDATE $? "starting payment"
