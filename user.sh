@@ -63,37 +63,37 @@ fi
 
 curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user.zip &>>$LOGFILE
 
-VALIDATE $? "Code downloading"
+VALIDATE $? "downloading user artifact"
 
-cd /app
+cd /app &>>$LOGFILE
+
+VALIDATE $? "Moving into app directory"
 
 unzip /tmp/user.zip &>>$LOGFILE
 
-VALIDATE $? "Unzipping code"
-
-# Install npm dependencies
+VALIDATE $? "unzipping user"
 
 npm install &>>$LOGFILE
 
-VALIDATE $? "NPM dependencies installing"
+VALIDATE $? "Installing dependencies"
 
 # Setup SystemD user Service
 
 cp -v /home/centos/Roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
 
-VALIDATE $? "Creating user service"
+VALIDATE $? "copying user.service"
 
-# Load, Enable and Start service
+systemctl daemon-reload &>>$LOGFILE
 
-systemctl daemon-reload
+VALIDATE $? "daemon reload"
 
 systemctl enable user &>>$LOGFILE
 
-VALIDATE $? "Enabling user service"
+VALIDATE $? "Enabling user"
 
 systemctl start user &>>$LOGFILE
 
-VALIDATE $? "Starting user service"
+VALIDATE $? "Starting user"
 
 # Creating mongo repo for client installation
 
@@ -109,6 +109,6 @@ VALIDATE  $? "Installing mongodb-shell"
 
 # Load Schema
 
-mongo --host mongodb.aslamroboshop.online < /app/schema/user.js &>>$LOGFILE
+mongo --host mongodb.aslamroboshop.online </app/schema/user.js &>>$LOGFILE
 
 VALIDATE $? "Schema loading"
