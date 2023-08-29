@@ -27,29 +27,29 @@ VALIDATE()
 
 # Install Nginx
 
-yum install nginx -y&>>  $LOGFILE
+yum install nginx -y &>> $LOGFILE
 
 VALIDATE $? "Installing nginx"
 
 # Enable and Start nginx service
 
-systemctl enable nginx&>>  $LOGFILE
+systemctl enable nginx &>> $LOGFILE
 
 VALIDATE $? "Enabling nginx service"
 
-systemctl start nginx&>>  $LOGFILE
+systemctl start nginx &>> $LOGFILE
 
 VALIDATE $? "Starting nginx service"
 
 # Remove the default content that web server is serving
 
-rm -rf /usr/share/nginx/html/*&>>  $LOGFILE
+rm -rf /usr/share/nginx/html/* &>> $LOGFILE
 
 VALIDATE $? "Deleting default content"
 
 # Download the frontend content
 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip&>>  $LOGFILE
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>> $LOGFILE
 
 VALIDATE $? "Downloading required content"
 
@@ -57,14 +57,14 @@ VALIDATE $? "Downloading required content"
 
 cd /usr/share/nginx/html
 
-unzip /tmp/frontend.zip&>>  $LOGFILE
+unzip /tmp/frontend.zip &>> $LOGFILE
 
 # Create Nginx Reverse Proxy Configuration
 
-cp -v /home/centos/roboshop-shell/roboshop.con /etc/nginx/default.d/roboshop.conf&>>  $LOGFILE
+cp -v /home/centos/roboshop-shell/roboshop.con /etc/nginx/default.d/roboshop.conf &>> $LOGFILE
 
 # Restart Nginx Service to load the changes of the configuration
 
-systemctl restart nginx &>>  $LOGFILE
+systemctl restart nginx &>> $LOGFILE
 
 VALIDATE $? "Restarting nginx service"
