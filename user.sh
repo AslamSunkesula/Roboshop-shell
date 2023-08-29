@@ -44,7 +44,7 @@ VALIDATE "Installing nodejs"
 # Add application User if not exist
 
 id roboshop &>> /dev/null
-if [[ $? -ne 0 ]]
+if [ $? -ne 0 ]
 then
     useradd roboshop
     VALIDATE "User roboshop created"
@@ -53,7 +53,7 @@ fi
 # This is a usual practice that runs in the organization. Lets setup an app directory if not exist
 
 DIR="/app"
-if [[ ! -d "$DIR" ]]
+if [ ! -d "$DIR" ]
 then
     mkdir "$DIR"
     VALIDATE "$DIR Creation"
@@ -79,7 +79,7 @@ VALIDATE $? "NPM dependencies installing"
 
 # Setup SystemD user Service
 
-cp -v /home/centos/roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
+cp -v /home/centos/Roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
 
 VALIDATE $? "Creating user service"
 
