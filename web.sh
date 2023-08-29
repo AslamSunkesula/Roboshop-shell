@@ -4,7 +4,7 @@ DATE=$(date +%F)
 LOGSDIR=/tmp
 # /home/centos/shellscript-logs/script-name-date.log
 SCRIPT_NAME=$0
-LOGFILE=$LOGSDIR/$SCRIPT_NAME-$DATE.log
+LOGFILE=$LOGSDIR/$0-$DATE.log
 USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
@@ -26,13 +26,10 @@ VALIDATE(){
         echo -e "$2 ... $G SUCCESS $N"
     fi
 }
-#
-
-#Install Nginx
 
 yum install nginx -y &>>$LOGFILE
 
-VALIDATE $? "Installing Nginx" 
+VALIDATE $? "Installing Nginx"
 
 systemctl enable nginx &>>$LOGFILE
 
@@ -58,8 +55,7 @@ unzip /tmp/web.zip &>>$LOGFILE
 
 VALIDATE $? "unzipping web artifact"
 
-
-cp /home/centos/Roboshop-shell/roboshop.con /etc/nginx/default.d/roboshop.conf  &>>$LOGFILE
+cp /home/centos/Roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf  &>>$LOGFILE
 
 VALIDATE $? "copying roboshop config"
 
