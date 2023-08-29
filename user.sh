@@ -69,7 +69,7 @@ cd /app &>>$LOGFILE
 
 VALIDATE $? "Moving into app directory"
 
-unzip /tmp/user.zip &>>$LOGFILE
+unzip -o /tmp/user.zip &>>$LOGFILE
 
 VALIDATE $? "unzipping user"
 
