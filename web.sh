@@ -2,7 +2,7 @@
 
 DATE=$(date +%F)
 SCRIPT_NAME="$0"
-LOG_FILE=/tmp/$SCRIPT_NAME-$DATE.log
+LOGFILE=/tmp/$SCRIPT_NAME-$DATE.log
 
 R="\e[31m"
 G="\e[32m"
@@ -27,29 +27,29 @@ VALIDATE()
 
 # Install Nginx
 
-yum install nginx -y &>> "$LOG_FILE"
+yum install nginx -y&>>  $LOGFILE
 
 VALIDATE $? "Installing nginx"
 
 # Enable and Start nginx service
 
-systemctl enable nginx &>> "$LOG_FILE"
+systemctl enable nginx&>>  $LOGFILE
 
 VALIDATE $? "Enabling nginx service"
 
-systemctl start nginx &>> "$LOG_FILE"
+systemctl start nginx&>>  $LOGFILE
 
 VALIDATE $? "Starting nginx service"
 
 # Remove the default content that web server is serving
 
-rm -rf /usr/share/nginx/html/* &>> "$LOG_FILE"
+rm -rf /usr/share/nginx/html/*&>>  $LOGFILE
 
 VALIDATE $? "Deleting default content"
 
 # Download the frontend content
 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>> "$LOG_FILE"
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip&>>  $LOGFILE
 
 VALIDATE $? "Downloading required content"
 
@@ -57,14 +57,14 @@ VALIDATE $? "Downloading required content"
 
 cd /usr/share/nginx/html
 
-unzip /tmp/frontend.zip &>> "$LOG_FILE"
+unzip /tmp/frontend.zip&>>  $LOGFILE
 
 # Create Nginx Reverse Proxy Configuration
 
-cp -v /home/centos/roboshop-shell/roboshop.con /etc/nginx/default.d/roboshop.conf &>> "$LOG_FILE"
+cp -v /home/centos/roboshop-shell/roboshop.con /etc/nginx/default.d/roboshop.conf&>>  $LOGFILE
 
 # Restart Nginx Service to load the changes of the configuration
 
-systemctl restart nginx  &>> "$LOG_FILE"
+systemctl restart nginx &>>  $LOGFILE
 
 VALIDATE $? "Restarting nginx service"
