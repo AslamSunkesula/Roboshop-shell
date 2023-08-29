@@ -21,7 +21,7 @@ for i in ${NAMES[@]}; do
 
     IP_ADDRESS=$(
         aws ec2 run-instances --image-id $IMAGE_ID --instance-type $INSTANCE_TYPE --security-group-ids $SECURITY_GROUP_ID
-        "ResourceType=volume,Tags=[{Key=Name,Value=$i}]" | jq -r '.Instances[0].PrivateIpAddress'
+        --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$i}]" | jq -r '.Instances[0].PrivateIpAddress'
     )
 
     echo "created $i instance : $IP_ADDRESS"
