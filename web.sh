@@ -34,7 +34,6 @@ yum install nginx -y &>>$LOGFILE
 
 VALIDATE $? "Installing Nginx" 
 
-
 systemctl enable nginx &>>$LOGFILE
 
 VALIDATE $? "Enabling Nginx"
