@@ -1,64 +1,70 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 DATE=$(date +%F)
-LOGSDIR=/tmp
-# /home/centos/shellscript-logs/script-name-date.log
-SCRIPT_NAME=$0
-LOGFILE=$LOGSDIR/$SCRIPT_NAME-$DATE.log
-USERID=$(id -u)
+SCRIPT_NAME="$0"
+LOG_FILE=/tmp/$SCRIPT_NAME-$DATE.log
+
 R="\e[31m"
 G="\e[32m"
-N="\e[0m"
-Y="\e[33m"
+W="\033[0m"
 
-if [ $USERID -ne 0 ]
+if [[ $(id -u) -ne 0 ]]
 then
-    echo -e "$R ERROR:: Please run this script with root access $N"
-    exit 1
+        echo -e "$R ERROR : Please run this sctipt with root user, swich to root and try $W"
+        exit 1
 fi
 
-VALIDATE(){
-    if [ $1 -ne 0 ]
-    then
-        echo -e "$2 ... $R FAILURE $N"
-        exit 1
-    else
-        echo -e "$2 ... $G SUCCESS $N"
-    fi
+VALIDATE()
+{
+    if [[ $? -ne 0 ]]
+        then
+                echo -e "$1 $R ..... Failure $W"
+                exit 2
+        else
+                echo -e "$1 $G ..... Success $W"
+        fi
 }
 
-yum install nginx -y &>>$LOGFILE
+# Install Nginx
 
-VALIDATE $? "Installing Nginx"
+yum install nginx -y &>> "$LOG_FILE"
 
-systemctl enable nginx &>>$LOGFILE
+VALIDATE $? "Installing nginx"
 
-VALIDATE $? "Enabling Nginx"
+# Enable and Start nginx service
 
-systemctl start nginx &>>$LOGFILE
+systemctl enable nginx &>> "$LOG_FILE"
 
-VALIDATE $? "Starting Nginx"
+VALIDATE $? "Enabling nginx service"
 
-rm -rf /usr/share/nginx/html/* &>>$LOGFILE
+systemctl start nginx &>> "$LOG_FILE"
 
-VALIDATE $? "Removing default index html files"
+VALIDATE $? "Starting nginx service"
 
-curl -o /tmp/web.zip https://roboshop-builds.s3.amazonaws.com/web.zip &>>$LOGFILE
+# Remove the default content that web server is serving
 
-VALIDATE $? "Downloading web artifact"
+rm -rf /usr/share/nginx/html/* &>> "$LOG_FILE"
 
-cd /usr/share/nginx/html &>>$LOGFILE
+VALIDATE $? "Deleting default content"
 
-VALIDATE $? "Moving to default HTML directory"
+# Download the frontend content
 
-unzip /tmp/web.zip &>>$LOGFILE
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>> "$LOG_FILE"
 
-VALIDATE $? "unzipping web artifact"
+VALIDATE $? "Downloading required content"
 
-cp /home/centos/roboshop-shell/roboshop.con /etc/nginx/default.d/roboshop.conf  &>>$LOGFILE
+# Extract the frontend content
 
-VALIDATE $? "copying roboshop config"
+cd /usr/share/nginx/html
 
-systemctl restart nginx  &>>$LOGFILE
+unzip /tmp/frontend.zip &>> "$LOG_FILE"
 
-VALIDATE $? "Restarting Nginx"
+# Create Nginx Reverse Proxy Configuration
+
+cp -v /home/centos/roboshope-shell/roboshop.con /etc/nginx/default.d/roboshop.conf &>> "$LOG_FILE"
+
+# Restart Nginx Service to load the changes of the configuration
+
+systemctl restart nginx  &>> "$LOG_FILE"
+
+VALIDATE $? "Restarting nginx service"
