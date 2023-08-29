@@ -11,13 +11,15 @@ G="\e[32m"
 N="\e[0m"
 Y="\e[33m"
 
-if [[ $USERID -ne 0 ]]; then
+if [ $USERID -ne 0 ] 
+then
     echo -e "$R ERROR:: Please run this script with root access $N"
     exit 1
 fi
 
 VALIDATE() {
-    if [[ $1 -ne 0 ]]; then
+    if [ $1 -ne 0 ] 
+    then
         echo -e "$2 ... $R FAILURE $N"
         exit 1
     else
@@ -37,19 +39,19 @@ VALIDATE $? "Installing NodeJS"
 # Add application User if not exist
 
 id roboshop &>> /dev/null
-if [[ $? -ne 0 ]]
+if [ $? -ne 0 ]
 then
     useradd roboshop
-    VALIDATE "User roboshop created"
+    VALIDATE $? "User roboshop created"
 fi
 
 # This is a usual practice that runs in the organization. Lets setup an app directory if not exist
 
 DIR="/app"
-if [[ ! -d "$DIR" ]] 
+if [ ! -d "$DIR" ]
 then
     mkdir "$DIR"
-    VALIDATE "$DIR Creation"
+    VALIDATE $? "$DIR Creation"
 fi
 
 
