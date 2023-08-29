@@ -61,7 +61,7 @@ fi
 
 # Download the application code to created app directory
 
-curl -L -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user.zip &>>$LOGFILE
+curl -o /tmp/user.zip https://roboshop-builds.s3.amazonaws.com/user.zip &>>$LOGFILE
 
 VALIDATE $? "downloading user artifact"
 
@@ -69,7 +69,7 @@ cd /app &>>$LOGFILE
 
 VALIDATE $? "Moving into app directory"
 
-unzip -o /tmp/user.zip &>>$LOGFILE
+unzip /tmp/user.zip &>>$LOGFILE
 
 VALIDATE $? "unzipping user"
 
@@ -77,9 +77,9 @@ npm install &>>$LOGFILE
 
 VALIDATE $? "Installing dependencies"
 
-# Setup SystemD user Service
+# give full path of user.service because we are inside /app
 
-cp -v /home/centos/Roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
+cp /home/centos/Roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
 
 VALIDATE $? "copying user.service"
 
@@ -94,18 +94,18 @@ VALIDATE $? "Enabling user"
 systemctl start user &>>$LOGFILE
 
 VALIDATE $? "Starting user"
-
 # Creating mongo repo for client installation
 
-cp -v /home/centos/Roboshope-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
+cp /home/centos/Roboshope-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
 
 VALIDATE $? "Repo creation"
 
 # Installing mongodb-client
 
+
 yum install mongodb-org-shell -y &>>$LOGFILE
 
-VALIDATE  $? "Installing mongodb-shell"
+VALIDATE $? "Installing mongo client"
 
 # Load Schema
 
