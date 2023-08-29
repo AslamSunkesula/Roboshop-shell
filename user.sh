@@ -96,7 +96,7 @@ systemctl start user &>>$LOGFILE
 VALIDATE $? "Starting user"
 # Creating mongo repo for client installation
 
-cp /home/centos/Roboshope-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
+cp /home/centos/Roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGFILE
 
 VALIDATE $? "Repo creation"
 
